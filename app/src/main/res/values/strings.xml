@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">The Chance Week9 Homework3 XO</string>
+    <string name="xWinner">X is Winner</string>
+    <string name="oWinner">O is Winner</string>
+</resources>
