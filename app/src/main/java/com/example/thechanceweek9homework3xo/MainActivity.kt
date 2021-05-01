@@ -1,97 +1,146 @@
 package com.example.thechanceweek9homework3xo
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import com.example.thechanceweek9homework3xo.databinding.ActivityMainBinding
+import com.example.thechanceweek9homework3xo.databinding.ActivityXoBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityXoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityXoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
     }
 
-    private var flag: Boolean = true
-
-    @SuppressLint("NewApi")
     fun btnClick(view: View) {
         val btn = view as Button
-        if (btn.text == "X" || btn.text == "O") return
-        if (flag) {
-            btn.text = "X"
-            btn.setTextColor(getColor(R.color.xcolor))
-            winLogic()
-        } else {
-            btn.text = "O"
-            btn.setTextColor(getColor(R.color.ocolor))
-            winLogic()
+        var cellId = 0
+
+        when (btn) {
+            binding.btn1 -> cellId = 1
+            binding.btn2 -> cellId = 2
+            binding.btn3 -> cellId = 3
+            binding.btn4 -> cellId = 4
+            binding.btn5 -> cellId = 5
+            binding.btn6 -> cellId = 6
+            binding.btn7 -> cellId = 7
+            binding.btn8 -> cellId = 8
+            binding.btn9 -> cellId = 9
         }
-        btn.isEnabled = false
-        flag = !flag
+        play(cellId, btn)
+    }
+
+    var activePlayer = 1
+    var player1 = ArrayList<Int>()
+    var player2 = ArrayList<Int>()
+
+    @SuppressLint("NewApi")
+    private fun play(cellId: Int, selectedBtn: Button) {
+        if (activePlayer == 1) {
+            selectedBtn.text = "X"
+            selectedBtn.setTextColor(getColor(R.color.xcolor))
+            player1.add(cellId)
+            activePlayer = 2
+        } else {
+            selectedBtn.text = "O"
+            selectedBtn.setTextColor(getColor(R.color.ocolor))
+            player2.add(cellId)
+            activePlayer = 1
+        }
+        selectedBtn.isEnabled = false
+        winLogic()
     }
 
     private fun winLogic() {
         //first row
-
-        if ( binding.btn1.text == binding.btn2.text && binding.btn2.text == binding.btn3.text && !binding.btn1.isEnabled ) {
-            winner()
+        if (player1.contains(1) && player1.contains(2) && player1.contains(3)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(1) && player2.contains(2) && player2.contains(3)) {
+            winner(2)
             return
         }
         //mid row
-        if ( binding.btn4.text == binding.btn5.text && binding.btn5.text == binding.btn6.text && !binding.btn4.isEnabled) {
-            winner()
+        if (player1.contains(4) && player1.contains(5) && player1.contains(6)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(4) && player2.contains(5) && player2.contains(6)) {
+            winner(2)
             return
         }
         //last row
-        if (binding.btn7.text == binding.btn8.text && binding.btn8.text == binding.btn9.text && !binding.btn7.isEnabled) {
-            winner()
+        if (player1.contains(7) && player1.contains(8) && player1.contains(9)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(7) && player2.contains(8) && player2.contains(9)) {
+            winner(2)
             return
         }
         //first column
-        if (binding.btn1.text == binding.btn4.text && binding.btn4.text == binding.btn7.text && !binding.btn1.isEnabled ) {
-            winner()
+        if (player1.contains(1) && player1.contains(4) && player1.contains(7)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(1) && player2.contains(4) && player2.contains(7)) {
+            winner(2)
             return
         }
         //mid column
-        if (binding.btn2.text == binding.btn5.text && binding.btn5.text == binding.btn8.text && !binding.btn2.isEnabled) {
-            winner()
+        if (player1.contains(2) && player1.contains(5) && player1.contains(8)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(2) && player2.contains(5) && player2.contains(8)) {
+            winner(2)
             return
         }
         //last column
-        if (binding.btn3.text == binding.btn6.text && binding.btn6.text == binding.btn9.text && !binding.btn3.isEnabled) {
-            winner()
+        if (player1.contains(3) && player1.contains(6) && player1.contains(9)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(3) && player2.contains(6) && player2.contains(9)) {
+            winner(2)
             return
         }
         //diagonal
-        if (binding.btn1.text == binding.btn5.text && binding.btn5.text == binding.btn9.text && !binding.btn1.isEnabled) {
-            winner()
+        if (player1.contains(1) && player1.contains(5) && player1.contains(9)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(1) && player2.contains(5) && player2.contains(9)) {
+            winner(2)
             return
         }
         //diagonal inverse
-        if (binding.btn3.text == binding.btn5.text && binding.btn5.text == binding.btn7.text && !binding.btn3.isEnabled) {
-            winner()
+        if (player1.contains(3) && player1.contains(5) && player1.contains(7)) {
+            winner(1)
+            return
+        }
+        if (player2.contains(3) && player2.contains(5) && player2.contains(7)) {
+            winner(2)
             return
         }
     }
 
 
-    private fun winner() {
+    private fun winner(player: Int) {
         val builder = AlertDialog.Builder(this, R.style.AlertDialogStyle)
         builder.setTitle("Game Over")
-        if (flag) {
+        if (player == 1) {
             builder.setMessage("X is Winner")
-        }
-        else {
+        } else {
             builder.setMessage("O is Winner")
         }
         builder.setPositiveButton("New Game") { dialog, _ ->
@@ -102,33 +151,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun newGame() {
-        binding.btn1.text=""
+        //reset game values
+        binding.btn1.text = ""
         binding.btn1.isEnabled = true
 
-        binding.btn2.text=""
+        binding.btn2.text = ""
         binding.btn2.isEnabled = true
 
-        binding.btn3.text=""
+        binding.btn3.text = ""
         binding.btn3.isEnabled = true
 
-        binding.btn4.text=""
+        binding.btn4.text = ""
         binding.btn4.isEnabled = true
 
-        binding.btn5.text=""
+        binding.btn5.text = ""
         binding.btn5.isEnabled = true
 
-        binding.btn6.text=""
+        binding.btn6.text = ""
         binding.btn6.isEnabled = true
 
-        binding.btn7.text=""
+        binding.btn7.text = ""
         binding.btn7.isEnabled = true
 
-        binding.btn8.text=""
+        binding.btn8.text = ""
         binding.btn8.isEnabled = true
 
-        binding.btn9.text=""
+        binding.btn9.text = ""
         binding.btn9.isEnabled = true
 
-        flag = true
+        activePlayer = 1
+        player1.clear()
+        player2.clear()
     }
 }
