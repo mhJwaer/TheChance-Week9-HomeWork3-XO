@@ -20,9 +20,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private var counter = 0
     fun btnClick(view: View) {
         val btn = view as Button
         var cellId = 0
+
 
         when (btn) {
             binding.btn1 -> cellId = 1
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             binding.btn8 -> cellId = 8
             binding.btn9 -> cellId = 9
         }
+        counter++
         play(cellId, btn)
     }
 
@@ -132,17 +135,21 @@ class MainActivity : AppCompatActivity() {
             winner(2)
             return
         }
+        if (counter == 9){
+            winner(-1)
+        }
     }
 
 
     private fun winner(player: Int) {
         val builder = AlertDialog.Builder(this, R.style.AlertDialogStyle)
         builder.setTitle("Game Over")
-        if (player == 1) {
-            builder.setMessage("X is Winner")
-        } else {
-            builder.setMessage("O is Winner")
+        when (player) {
+            1 -> builder.setMessage("X is Winner")
+            2 -> builder.setMessage("O is Winner")
+            else -> builder.setMessage("No On Wins")
         }
+
         builder.setPositiveButton("New Game") { dialog, _ ->
             newGame()
             dialog.dismiss()
@@ -182,5 +189,6 @@ class MainActivity : AppCompatActivity() {
         activePlayer = 1
         player1.clear()
         player2.clear()
+        counter = 0
     }
 }
